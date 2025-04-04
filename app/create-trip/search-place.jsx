@@ -1,109 +1,103 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { useNavigation } from 'expo-router';
-import { Colors } from './../../constants/Colors';
-import Autocomplete from 'react-native-autocomplete-input';
-import { CreateTripContext } from './../../context/CreateTripContext';
+import { View, Text, TextInput, FlatList, TouchableOpacity } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigation, useRouter } from "expo-router";
+import { CreateTripContext } from "./../../context/CreateTripContext";
 
-const API_KEY = "wyqKhVaoA0e4_haqjwB-Vq0YoID-ekFip75sdrSAWRY";
+const MAPTILER_API_KEY = "6jxTPdub4GJkSjv6UIvA";
 
 export default function SearchPlace() {
   const navigation = useNavigation();
-  const {tripData, setTripdata}= useContext(CreateTripContext);
-  const [query, setQuery] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
+  const { tripData, setTripData } = useContext(CreateTripContext);
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     navigation.setOptions({
       headerShown: true,
       headerTransparent: true,
-      headerTitle: 'Search'
+      headerTitle: "Search",
     });
   }, []);
 
-  const fetchPlaces = async (text) => {
-    if (!text) return;
-    const url = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${text}&apiKey=${API_KEY}&limit=5`;
+  useEffect(() => {
+    console.log(tripData);
+  }, [tripData]);
 
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-
-      if (data.items) {
-        const formattedData = data.items.map((item) => {
-          const province = item.address?.state || item.address?.county || "";
-          const country = item.address?.countryName || "";
-          return {
-            id: item.id,
-            title: province ? `${province}, ${country}` : country,
-          };
-        });
-
-        setSuggestions(formattedData);
+  const searchPlaces = async (query) => {
+    if (query.length > 2) {
+      try {
+        const response = await fetch(
+          `https://api.maptiler.com/geocoding/${encodeURIComponent(query)}.json?key=${MAPTILER_API_KEY}`
+        );
+        const text = await response.text(); // Get the raw response text
+        console.log("Raw API response:", text); // Log the raw response
+        
+        try {
+          const data = JSON.parse(text); // Try to parse the JSON
+          setSearchResults(data.features);
+        } catch (parseError) {
+          console.error("JSON parse error:", parseError);
+          console.log("Response that caused the error:", text);
+        }
+      } catch (error) {
+        console.error("Error searching places:", error);
       }
-    } catch (error) {
-      console.error("Lỗi khi gọi API HERE:", error);
+    } else {
+      setSearchResults([]);
     }
+  };
+  const handlePlaceSelect = (place) => {
+    setTripData({
+      locationInfo: {
+        name: place.place_name,
+        coordinates: {
+          lat: place.center[1],
+          lng: place.center[0],
+        },
+        // Note: MapTiler doesn't provide photo references or URLs directly
+        // You may need to use a different API or service for images
+        photoRef: null,
+        url: null,
+      },
+    });
+    router.push('/create-trip/select-traveler');
   };
 
   return (
-      <View style={{ padding: 25, paddingTop: 65, backgroundColor: Colors.WHITE, height: '100%' }}>
-      <Autocomplete
-        data={suggestions}
-        defaultValue={query}
+    <View
+      style={{
+        padding: 25,
+        paddingTop: 75,
+        backgroundColor: "#fff",
+        height: "100%",
+      }}
+    >
+      <TextInput
+        placeholder="Search Place"
+        value={searchQuery}
         onChangeText={(text) => {
-          setQuery(text);
-          fetchPlaces(text);
-          setTripdata({
-            location
-          })
-        }}
-        placeholder="Nhập địa điểm..."
-        containerStyle={{
-          flex: 1,
-          borderWidth: 0, 
-          backgroundColor: "transparent",
-        }}
-        inputContainerStyle={{
-          borderWidth: 0, 
-          borderBottomWidth: 0, 
-          borderColor: "#ccc",
-          backgroundColor: "transparent",
+          setSearchQuery(text);
+          searchPlaces(text);
         }}
         style={{
-          fontSize: 16,
+          borderWidth: 1,
+          borderRadius: 5,
+          marginTop: 25,
           padding: 10,
-          backgroundColor: "transparent",
         }}
-        listContainerStyle={{
-          borderWidth: 0, 
-          elevation: 0, 
-          backgroundColor: "transparent",
-        }}
-        listStyle={{
-          borderWidth: 0, 
-          backgroundColor: "transparent",
-          shadowColor: "transparent",
-        }}
-        flatListProps={{
-          keyExtractor: (item) => item.id,
-          renderItem: ({ item }) => (
-            <TouchableOpacity
-              onPress={() => {
-                setQuery(item.title);
-                setSuggestions([]);
-              }}
-              style={{ 
-                paddingVertical: 10, 
-                paddingHorizontal: 15,
-                borderBottomWidth: 1, 
-                borderBottomColor: "#ccc", // Đường gạch chân
-              }}
-            >
-              <Text style={{ fontSize: 14 }}>{item.title}</Text>
-            </TouchableOpacity>
-          ),
-        }}
+      />
+      <FlatList
+        data={searchResults}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => handlePlaceSelect(item)}
+            style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}
+          >
+            <Text>{item.place_name}</Text>
+          </TouchableOpacity>
+        )}
       />
     </View>
   );
