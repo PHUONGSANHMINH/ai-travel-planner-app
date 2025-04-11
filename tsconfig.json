@@ -15,10 +15,12 @@
     "**/*.jsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-     "components/Login.jsx", 
-     "app/_layout.jsx",
-     "app/create-trip/search-place.jsx",
-     "app/create-trip/select-traveler.jsx",
-     "app/create-trip/select-dates.jsx",
-     "app/create-trip/select-budget.jsx"]
+     "components/Login.jsx"
+  , "app/_layout.jsx",
+    "app/create-trip/search-place.jsx",
+    "app/create-trip/select-traveler.jsx",
+    "app/create-trip/select-dates.jsx",
+    "app/create-trip/select-budget.jsx",
+    "app/create-trip/review-trip.jsx",
+   "app/create-trip/generate-trip.jsx" ]
 }
