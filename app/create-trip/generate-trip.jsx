@@ -38,7 +38,7 @@ export default function GenerateTrip() {
       userEmail: user.email,
       tripPlan: tripResp,//ai result
       tripData: JSON.stringify(tripData),
-      //user selec data
+      //user select data
       docId: docId
     })
 
