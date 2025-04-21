@@ -180,7 +180,7 @@ export default function TripDetails() {
            
            <HotelList hotelList={tripDetails?.tripPlan?.hotelOptions}/>
         {/*  Trip day plan */}
-           <PlannedTrip details={tripDetails?.tripPlan?.tripDetails}/>
+           <PlannedTrip details={tripDetails?.tripPlan?.dailyItinerary}/>
       </View>
 
     </ScrollView>
