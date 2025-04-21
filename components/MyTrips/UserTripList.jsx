@@ -69,7 +69,7 @@ export default function UserTripList({ userTrips }) {
                 marginTop: 20
             }}>
                 {loading ? (
-                    <ActivityIndicator size="large" color="#007AFF" />
+                    <ActivityIndicator size="large" color={Colors.PRIMARY} />
                 ) : (
                     <Image source={imageUrl ? { uri: imageUrl } : require('./../../assets/images/login2.jpg')}
                     style={{
@@ -105,7 +105,10 @@ export default function UserTripList({ userTrips }) {
                             color: Colors.GRAY
                         }}> 🚌 {LastestTrip.traveler.title}</Text>
                     </View>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity
+                    onPress={() => router.push({ pathname: '/trip-details', params: { trip: JSON.stringify(userTrips[0]) 
+                    }})}
+                    style={{
                         backgroundColor: Colors.PRIMARY,
                         padding: 15,
                         borderRadius: 15,

@@ -22,5 +22,6 @@
     "app/create-trip/select-dates.jsx",
     "app/create-trip/select-budget.jsx",
     "app/create-trip/review-trip.jsx",
-   "app/create-trip/generate-trip.jsx" ]
+   "app/create-trip/generate-trip.jsx",
+    "app/trip-details/index.jsx" ]
 }
