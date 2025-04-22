@@ -20,6 +20,8 @@ const fetchImageFromPixabay = async (searchTerm) => {
     }
   };
 
+  
+
 export default function HotelList({ hotelList }) {
 
     const [hotelImages, setHotelImages] = useState({});
