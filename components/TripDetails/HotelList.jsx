@@ -88,8 +88,8 @@ export default function HotelList({ hotelList }) {
                         </View>
                         <View style={{
                             display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between'
+                            flexDirection: 'col',
+                            justifyContent: 'space-between',
                         }}>
                             <Text style={{
                                 fontFamily: 'outfit'

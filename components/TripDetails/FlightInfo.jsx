@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Linking } from 'react-native'
 import React from 'react'
 import { Colors } from '@/constants/Colors'
 
@@ -21,7 +21,9 @@ export default function FlightInfo({ flightData }) {
                     fontFamily: 'outfit-bold',
                     fontSize: 20,
                 }}>✈️ Flights</Text>
-                <TouchableOpacity style={{
+                <TouchableOpacity 
+                onPress={() => Linking.openURL('https://www.vietjetair.com/vi')}
+                style={{
                     backgroundColor: Colors.PRIMARY,
                     padding: 5,
                     width: 100,

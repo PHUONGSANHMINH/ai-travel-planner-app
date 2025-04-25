@@ -59,7 +59,8 @@ export default function UserTripCard({ trip }) {
   }
 
   return (
-    <View style={{
+    <TouchableOpacity 
+    style={{
       marginTop: 20,
       display: 'flex',
       flexDirection: 'row',
@@ -89,6 +90,6 @@ export default function UserTripCard({ trip }) {
           color: Colors.GRAY,
         }}>Travelling: {formatData(trip.tripData).traveler.title}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
